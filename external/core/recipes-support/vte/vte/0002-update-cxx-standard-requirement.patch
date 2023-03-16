@@ -1,0 +1,29 @@
+From 1477553e759c6fdfdcaf121aafc98f02d0014c83 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ilies.chergui@medtronic.com>
+Date: Mon, 13 Mar 2023 20:32:52 +0000
+Subject: [PATCH 3/3] update cxx standard requirement
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Ilies CHERGUI <ilies.chergui@medtronic.com>
+---
+ meson.build | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index a744482..cdca506 100644
+--- a/meson.build
++++ b/meson.build
+@@ -30,8 +30,8 @@ project(
+ # Compiler requirements
+ 
+ c_req_std                 = 'gnu11'
+-cxx_req_std               = 'gnu++20'
+-gxx_req_version           = '10.0'
++cxx_req_std               = 'gnu++17'
++gxx_req_version           = '7.0'
+ clangxx_req_version       = '11.0'
+ 
+ # Version requirements
+-- 
+2.25.1
+
