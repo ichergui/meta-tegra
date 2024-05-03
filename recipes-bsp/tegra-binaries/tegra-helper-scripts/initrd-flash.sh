@@ -156,7 +156,9 @@ sign_binaries() {
 		  external-flash.xml.tmp $DTBFILE $EMMC_BCTS $ODMDATA $LNXFILE $ROOTFS_IMAGE; then
 	    if [ $have_odmsign_func -eq 0 ]; then
 		cp signed/flash.xml.tmp external-secureflash.xml
-		copy_signed_binaries
+		if ! copy_signed_binaries; then
+		    return 1
+		fi
 	    else
 		mv secureflash.xml external-secureflash.xml
 	    fi
@@ -165,7 +167,7 @@ sign_binaries() {
 	fi
 	. ./boardvars.sh
     fi
-    if MACHINE=$MACHINE BOARDID=$BOARDID FAB=$FAB BOARDSKU=$BOARDSKU BOARDREV=$BOARDREV CHIPREV=$CHIPREV CHIP_SKU=$CHIP_SKU \
+    if MACHINE=$MACHINE BOARDID=$BOARDID FAB=$FAB BOARDSKU=$BOARDSKU BOARDREV=$BOARDREV CHIPREV=$CHIPREV CHIP_SKU=$CHIP_SKU serial_number=$serial_number \
 	      "$here/$FLASH_HELPER" --no-flash --sign -u "$keyfile" -v "$sbk_keyfile" $instance_args \
 	      flash.xml.in $DTBFILE $EMMC_BCTS $ODMDATA $LNXFILE $ROOTFS_IMAGE; then
 	if [ $have_odmsign_func -eq 0 ]; then
@@ -187,12 +189,7 @@ sign_binaries() {
 
 prepare_for_rcm_boot() {
     if [ $have_odmsign_func -eq 1 ]; then
-	local dtbfile_for_rcmboot=kernel_$DTBFILE
-	if [ "$CHIPID" = "0x19" ]; then
-	    cp kernel_$DTBFILE rcm_kernel_$DTBFILE
-	    dtbfile_for_rcmboot=rcm_kernel_$DTBFILE
-	fi
-	"$here/rewrite-tegraflash-args" -o rcm-boot.sh --bins kernel=initrd-flash.img,kernel_dtb=$dtbfile_for_rcmboot --cmd rcmboot --add="--securedev" flash_signed.sh || return 1
+	"$here/rewrite-tegraflash-args" -o rcm-boot.sh --bins kernel=initrd-flash.img,kernel_dtb=kernel_$DTBFILE --cmd rcmboot --add="--securedev" flash_signed.sh || return 1
 	if [ "$CHIPID" = "0x23" ]; then
 	    sed -i -e's,mb2_t234_with_mb2_bct_MB2,mb2_t234_with_mb2_cold_boot_bct_MB2,' -e's, uefi_jetson, rcmboot_uefi_jetson,' rcm-boot.sh || return 1
 	fi
@@ -365,13 +362,12 @@ generate_flash_package() {
 	echo "erase-nvme" >> "$mnt/flashpkg/conf/command_sequence"
     fi
     if [ $EXTERNAL_ROOTFS_DRIVE -eq 1 -a $BOOT_PARTITIONS_ON_EMMC -eq 1 ]; then
-	echo "export-devices mmcblk0 $ROOTFS_DEVICE" >> "$mnt/flashpkg/conf/command_sequence"
+	echo "export-devices mmcblk3 $ROOTFS_DEVICE" >> "$mnt/flashpkg/conf/command_sequence"
     else
 	[ $EXTERNAL_ROOTFS_DRIVE -eq 0 -o $NO_INTERNAL_STORAGE -eq 1 ] || echo "erase-mmc" >> "$mnt/flashpkg/conf/command_sequence"
 	echo "export-devices $ROOTFS_DEVICE" >> "$mnt/flashpkg/conf/command_sequence"
     fi
 
-    echo "extra" >> "$mnt/flashpkg/conf/command_sequence"
     echo "reboot" >> "$mnt/flashpkg/conf/command_sequence"
 
     unmount_and_release "$mnt" "$dev" || return 1
@@ -399,7 +395,7 @@ write_to_device() {
     else
 	datased="-e/DATAFILE/d"
     fi
-    if [ "$devname" = "mmcblk0" -a $BOOT_PARTITIONS_ON_EMMC -eq 1 ]; then
+    if [ "$devname" = "mmcblk3" -a $BOOT_PARTITIONS_ON_EMMC -eq 1 ]; then
 	extraarg="--honor-start-locations"
     fi
     # XXX
@@ -497,13 +493,12 @@ if ! run_rcm_boot 2>&1 >>"$logfile"; then
 fi
 [ ! -f ./boardvars.sh ] || . ./boardvars.sh
 
-if [ -z "$BR_CID" ]; then
-    echo "ERR: did not get unique ID at $(date -Is)" | tee -a "$logfile"
+if [ -z "$serial_number" ]; then
+    echo "ERR: did not get device serial number at $(date -Is)" | tee -a "$logfile"
     exit 1
 fi
 
-session_id=$("$here/brcid-to-uid" $BR_CID)
-session_id=$(echo -n "$session_id" | tail -c8)
+session_id=$(printf "%x" "$serial_number" | tail -c8)
 
 # Boot device flashing
 step_banner "Sending flash sequence commands"
@@ -515,7 +510,7 @@ if [ $EXTERNAL_ROOTFS_DRIVE -eq 1 ]; then
     keep_going=1
     if [ $BOOT_PARTITIONS_ON_EMMC -eq 1 ]; then
 	step_banner "Writing boot partitions to internal storage device"
-	if ! write_to_device mmcblk0 flash.xml.in --no-final-part 2>&1 | tee -a "$logfile"; then
+	if ! write_to_device mmcblk3 flash.xml.in --no-final-part 2>&1 | tee -a "$logfile"; then
 	    echo "ERR: write failure to internal storage at $(date -Is)" | tee -a "$logfile"
 	    if [ $early_final_status -eq 0 ]; then
 		exit 1

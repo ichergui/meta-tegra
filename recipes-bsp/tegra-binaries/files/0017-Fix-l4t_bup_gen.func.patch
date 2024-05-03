@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Tue, 16 Apr 2024 18:01:00 -0600
+Subject: Fix l4t_bup_gen.func
+
+
+diff --git a/bootloader/l4t_bup_gen.func b/bootloader/l4t_bup_gen.func
+index 1e820c7..faecacc 100644
+--- a/bootloader/l4t_bup_gen.func
++++ b/bootloader/l4t_bup_gen.func
+@@ -599,6 +599,16 @@ _sign_multi_images()
+ 		mkdir multi_signed
+ 	fi;
+ 
++	if [ "${ODM_SIGN}" == "" ]; then
++		echo ""
++		echo "Generating signed binaries for $_sw_spec ..."
++		echo ${cmd}
++		eval ${cmd}
++		if [ $? -ne 0 ];then
++			exit 1
++		fi;
++	fi
++
+ 	echo ""
+ 	echo "signing images succeeded"
+ 	echo ""
+-- 
+2.34.1
+
