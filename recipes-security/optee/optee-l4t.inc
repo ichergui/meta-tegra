@@ -1,6 +1,6 @@
 COMPATIBLE_MACHINE = "(tegra)"
 
-TEGRA_SRC_SUBARCHIVE = "Linux_for_Tegra/source/public/nvidia-jetson-optee-source.tbz2"
+TEGRA_SRC_SUBARCHIVE = "Linux_for_Tegra/source/nvidia-jetson-optee-source.tbz2"
 
 inherit l4t_bsp python3native
 require recipes-bsp/tegra-sources/tegra-sources-${L4T_VERSION}.inc
@@ -11,7 +11,6 @@ DEPENDS = "python3-pyelftools-native python3-cryptography-native standalone-mm-o
 export OPENSSL_MODULES="${STAGING_LIBDIR_NATIVE}/ossl-modules"
 
 OPTEE_NV_PLATFORM ?= ""
-OPTEE_NV_PLATFORM:tegra194 = "t194"
 OPTEE_NV_PLATFORM:tegra234 = "t234"
 
 TA_DEV_KIT_DIR = "${STAGING_INCDIR}/optee/export-user_ta"
