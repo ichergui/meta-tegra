@@ -1,12 +1,14 @@
 L4T_BSP_NAME = "${L4T_SRCS_NAME}"
 SRC_URI = "${L4T_URI_BASE}/public_sources.tbz2;downloadfilename=${L4T_BSP_PREFIX}-public_sources-${L4T_VERSION}.tbz2"
-SRC_URI[sha256sum] = "89368d7003c278cdcf3746501db0ba5aa01f8cf9b39f2205d2d16c7852ab523e"
+SRC_URI[sha256sum] = "4e3ff614b07d73ed9013b9deefbc9d7a4e067936c89e206b4e3512c627a28094"
 
 inherit l4t_bsp
 
 unpack_tar_in_tar() {
     cd ${WORKDIR}
-    tar -x -j -f ${SRC_ARCHIVE} ${TEGRA_SRC_SUBARCHIVE} --to-command="tar -x -j --no-same-owner -f- ${TEGRA_SRC_SUBARCHIVE_OPTS}"
+    for subarchive in ${TEGRA_SRC_SUBARCHIVE}; do
+        tar -x -j -f ${SRC_ARCHIVE} $subarchive --to-command="tar -x -j --no-same-owner -f- ${TEGRA_SRC_SUBARCHIVE_OPTS}"
+    done
     if [ -n "${TEGRA_SRC_EXTRA_SUBARCHIVE}" ]; then
         tar -x -j -f ${SRC_ARCHIVE} ${TEGRA_SRC_EXTRA_SUBARCHIVE} --to-command="tar -x -j --no-same-owner -f- ${TEGRA_SRC_EXTRA_SUBARCHIVE_OPTS}"
     fi
