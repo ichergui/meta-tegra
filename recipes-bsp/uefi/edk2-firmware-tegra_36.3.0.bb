@@ -1,11 +1,10 @@
-require edk2-firmware-tegra-35.5.0.inc
+require edk2-firmware-tegra-36.3.0.inc
 
 DESCRIPTION = "UEFI EDK2 Firmware for Jetson platforms"
 
 PROVIDES = "virtual/bootloader"
 
 DEPENDS += "dtc-native"
-DEPENDS:append:tegra194 = " nvdisp-init"
 
 TEGRA_UEFI_SIGNING_CLASS ??= "tegra-uefi-signing"
 
@@ -14,27 +13,24 @@ inherit deploy ${TEGRA_UEFI_SIGNING_CLASS}
 EDK2_PLATFORM = "Jetson"
 EDK2_PLATFORM_DSC = "Platform/NVIDIA/Jetson/Jetson.dsc"
 EDK2_BIN_NAME = "uefi_jetson.bin"
-NVDISPLAY_INIT_DEFAULT = ""
-NVDISPLAY_INIT_DEFAULT:tegra194 = "${DEPLOY_DIR_IMAGE}/nvdisp-init.bin"
-NVDISPLAY_INIT ?= "${NVDISPLAY_INIT_DEFAULT}"
-NVDISPLAY_INIT_DEPS = ""
-NVDISPLAY_INIT_DEPS:tegra194 = "nvdisp-init:do_deploy"
 
 SRC_URI += "${@'file://L4TConfiguration-RootfsRedundancyLevelABEnable.dtsi' if bb.utils.to_boolean(d.getVar('USE_REDUNDANT_FLASH_LAYOUT')) else ''}"
+
+SRC_URI += "file://nvbuildconfig.py"
+
+do_configure:append() {
+    ${PYTHON} ${WORKDIR}/nvbuildconfig.py ${S_EDK2_NVIDIA}/Silicon/NVIDIA/Kconfig ${S_EDK2_NVIDIA}/Platform/NVIDIA/Jetson/Jetson.defconfig ${B}/nvidia-config/Jetson/.config
+}
+
 
 do_compile:append() {
     rm -rf ${B}/images
     mkdir ${B}/images
-    python3 ${S_EDK2_NVIDIA}/Silicon/NVIDIA/Tools/FormatUefiBinary.py \
+    ${PYTHON} ${S_EDK2_NVIDIA}/Silicon/NVIDIA/edk2nv/FormatUefiBinary.py \
         ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${EDK_COMPILER}/FV/UEFI_NS.Fv \
         ${B}/images/${EDK2_BIN_NAME}.tmp
-    if [ -n "${NVDISPLAY_INIT}" ]; then
-        cat "${NVDISPLAY_INIT}" ${B}/images/${EDK2_BIN_NAME}.tmp > ${B}/images/${EDK2_BIN_NAME}
-	rm ${B}/images/${EDK2_BIN_NAME}.tmp
-    else
-	mv ${B}/images/${EDK2_BIN_NAME}.tmp ${B}/images/${EDK2_BIN_NAME}
-    fi
-    python3 ${S_EDK2_NVIDIA}/Silicon/NVIDIA/Tools/FormatUefiBinary.py \
+    mv ${B}/images/${EDK2_BIN_NAME}.tmp ${B}/images/${EDK2_BIN_NAME}
+    ${PYTHON} ${S_EDK2_NVIDIA}/Silicon/NVIDIA/edk2nv/FormatUefiBinary.py \
         ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${EDK_COMPILER}/AARCH64/L4TLauncher.efi \
         ${B}/images/BOOTAA64.efi
     for f in ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${EDK_COMPILER}/AARCH64/Silicon/NVIDIA/Tegra/DeviceTree/DeviceTree/OUTPUT/*.dtb; do
@@ -48,7 +44,6 @@ do_compile:append() {
        dtc -Idts -Odtb -o ${B}/images/L4TConfiguration-RootfsRedundancyLevelABEnable.dtbo ${WORKDIR}/L4TConfiguration-RootfsRedundancyLevelABEnable.dtsi
     fi
 }
-do_compile[depends] += "${NVDISPLAY_INIT_DEPS}"
 
 sign_efi_app() {
     tegra_uefi_sbsign "$1"
