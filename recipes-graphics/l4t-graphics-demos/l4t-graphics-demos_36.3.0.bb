@@ -12,7 +12,7 @@ SRC_URI += "\
 
 REQUIRED_DISTRO_FEATURES = "opengl"
 
-DEPENDS = "libglvnd libdrm libdrm-nvdc"
+DEPENDS = "libglvnd libdrm"
 
 inherit pkgconfig features_check
 
