@@ -1,17 +1,17 @@
-From 421702f904015ccdaab81d13e9079d2f727f5ec9 Mon Sep 17 00:00:00 2001
-From: Matt Madison <matt@madison.systems>
-Date: Sun, 31 Jan 2021 05:48:15 -0800
-Subject: [PATCH] Update makefile for OE builds
+From 6533813ca17fcff1c2944697c40fb4aeb5126168 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Tue, 30 Apr 2024 22:59:32 +0100
+Subject: [PATCH 1/2] Update makefile for OE builds
 
 Signed-off-by: Matt Madison <matt@madison.systems>
 ---
- Makefile | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ Makefile | 37 ++++++++++++++++---------------------
+ 1 file changed, 16 insertions(+), 21 deletions(-)
 
-Index: gst-nvvidconv/Makefile
-===================================================================
---- gst-nvvidconv.orig/Makefile
-+++ gst-nvvidconv/Makefile
+diff --git a/Makefile b/Makefile
+index 79edca7..0d500fc 100644
+--- a/Makefile
++++ b/Makefile
 @@ -26,42 +26,36 @@
  # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
@@ -81,3 +81,6 @@ Index: gst-nvvidconv/Makefile
  
  .PHONY: clean
  clean:
+-- 
+2.34.1
+
