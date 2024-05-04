@@ -1,0 +1,171 @@
+From 16d6581c109590fe0ca7bf0b1ec310ba07c3980e Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Tue, 30 Apr 2024 12:32:08 +0100
+Subject: [PATCH 3/3] Rename confliting modules
+
+Bitbake doesn't like when modules that are in the upstream
+kernel are updated in the OOT modules using the same name.
+This renames the OOT modules to use different names to avoid
+the conflicts (by appending '-next' or '-oot'), similar to
+how the OOT modules were named before (in 36.2.0).
+---
+ nvidia-oot/drivers/gpu/drm/tegra/Makefile |  6 +-
+ nvidia-oot/drivers/gpu/host1x/Makefile    |  6 +-
+ nvidia-oot/drivers/media/i2c/Makefile     |  3 +-
+ nvidia-oot/drivers/spi/Makefile           |  3 +-
+ nvidia-oot/sound/soc/tegra/Makefile       | 68 +++++++++++------------
+ 5 files changed, 44 insertions(+), 42 deletions(-)
+
+diff --git a/nvidia-oot/drivers/gpu/drm/tegra/Makefile b/nvidia-oot/drivers/gpu/drm/tegra/Makefile
+index 4ac56fd..9a08c0c 100644
+--- a/nvidia-oot/drivers/gpu/drm/tegra/Makefile
++++ b/nvidia-oot/drivers/gpu/drm/tegra/Makefile
+@@ -5,7 +5,7 @@ ccflags-$(CONFIG_DRM_TEGRA_DEBUG) += -DDEBUG
+ ccflags-y += -I$(srctree.nvidia-oot)/drivers/gpu/drm/tegra/include
+ ccflags-y += -I$(srctree.hwpm)/include
+ 
+-tegra-drm-y := \
++tegra-drm-next-y := \
+ 	drm.o \
+ 	uapi.o \
+ 	submit.o \
+@@ -37,6 +37,6 @@ tegra-drm-y := \
+ 	ofa.o \
+ 	virt.o
+ 
+-tegra-drm-y += trace.o
++tegra-drm-next-y += trace.o
+ 
+-obj-m := tegra-drm.o
++obj-m := tegra-drm-next.o
+diff --git a/nvidia-oot/drivers/gpu/host1x/Makefile b/nvidia-oot/drivers/gpu/host1x/Makefile
+index 9136140..97109f3 100644
+--- a/nvidia-oot/drivers/gpu/host1x/Makefile
++++ b/nvidia-oot/drivers/gpu/host1x/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ # Copyright (c) 2022-2024, NVIDIA CORPORATION.  All rights reserved.
+ 
+-host1x-y = \
++host1x-next-y = \
+ 	bus.o \
+ 	syncpt.o \
+ 	dev.o \
+@@ -21,7 +21,7 @@ host1x-y = \
+ 	hw/host1x07.o \
+ 	hw/host1x08.o
+ 
+-host1x-$(CONFIG_IOMMU_API) += \
++host1x-next-$(CONFIG_IOMMU_API) += \
+ 	context.o
+ 
+-obj-m := host1x.o
++obj-m := host1x-next.o
+diff --git a/nvidia-oot/drivers/media/i2c/Makefile b/nvidia-oot/drivers/media/i2c/Makefile
+index 7c5913c..3ef2bb8 100644
+--- a/nvidia-oot/drivers/media/i2c/Makefile
++++ b/nvidia-oot/drivers/media/i2c/Makefile
+@@ -6,7 +6,8 @@ subdir-ccflags-y += -Werror
+ obj-m += max9295.o
+ obj-m += max9296.o
+ ifeq ($(findstring ack_src,$(NV_BUILD_KERNEL_OPTIONS)),)
+-obj-m += max96712.o
++max96712-oot-objs := max96712.o
++obj-m += max96712-oot.o
+ 
+ ifdef CONFIG_MEDIA_SUPPORT
+ obj-m += ar1335_common.o
+diff --git a/nvidia-oot/drivers/spi/Makefile b/nvidia-oot/drivers/spi/Makefile
+index 6743c24..9ba4073 100644
+--- a/nvidia-oot/drivers/spi/Makefile
++++ b/nvidia-oot/drivers/spi/Makefile
+@@ -2,5 +2,6 @@
+ # Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
+ 
+ obj-m += spi-aurix-tegra.o
+-obj-m += spi-tegra210-quad.o
++spi-tegra210-quad-oot-objs := spi-tegra210-quad.o
++obj-m += spi-tegra210-quad-oot.o
+ obj-m += spi-tegra124-slave.o
+diff --git a/nvidia-oot/sound/soc/tegra/Makefile b/nvidia-oot/sound/soc/tegra/Makefile
+index 6efe788..dd1667e 100644
+--- a/nvidia-oot/sound/soc/tegra/Makefile
++++ b/nvidia-oot/sound/soc/tegra/Makefile
+@@ -1,40 +1,40 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ # SPDX-FileCopyrightText: Copyright (c) 2023-2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ 
+-snd-soc-tegra-utils-objs		:= tegra_asoc_utils.o tegra_asoc_machine.o \
++snd-soc-tegra-utils-oot-objs		:= tegra_asoc_utils.o tegra_asoc_machine.o \
+ 					   tegra_isomgr_bw.o tegra_codecs.o
+-snd-soc-tegra210-ahub-objs		:= tegra210_ahub.o
+-snd-soc-tegra210-dmic-objs		:= tegra210_dmic.o
+-snd-soc-tegra210-i2s-objs		:= tegra210_i2s.o
+-snd-soc-tegra186-dspk-objs		:= tegra186_dspk.o
+-snd-soc-tegra210-admaif-objs		:= tegra210_admaif.o
+-snd-soc-tegra210-amx-objs		:= tegra210_amx.o
+-snd-soc-tegra210-adx-objs		:= tegra210_adx.o
+-snd-soc-tegra210-mixer-objs		:= tegra210_mixer.o
+-snd-soc-tegra210-sfc-objs		:= tegra210_sfc.o
+-snd-soc-tegra210-afc-objs		:= tegra210_afc.o
+-snd-soc-tegra210-mvc-objs		:= tegra210_mvc.o
+-snd-soc-tegra210-iqc-objs		:= tegra210_iqc.o
+-snd-soc-tegra186-asrc-objs		:= tegra186_asrc.o
+-snd-soc-tegra186-arad-objs		:= tegra186_arad.o
+-snd-soc-tegra210-ope-objs		:= tegra210_ope.o tegra210_peq.o \
++snd-soc-tegra210-ahub-oot-objs		:= tegra210_ahub.o
++snd-soc-tegra210-dmic-oot-objs		:= tegra210_dmic.o
++snd-soc-tegra210-i2s-oot-objs		:= tegra210_i2s.o
++snd-soc-tegra186-dspk-oot-objs		:= tegra186_dspk.o
++snd-soc-tegra210-admaif-oot-objs		:= tegra210_admaif.o
++snd-soc-tegra210-amx-oot-objs		:= tegra210_amx.o
++snd-soc-tegra210-adx-oot-objs		:= tegra210_adx.o
++snd-soc-tegra210-mixer-oot-objs		:= tegra210_mixer.o
++snd-soc-tegra210-sfc-oot-objs		:= tegra210_sfc.o
++snd-soc-tegra210-afc-oot-objs		:= tegra210_afc.o
++snd-soc-tegra210-mvc-oot-objs		:= tegra210_mvc.o
++snd-soc-tegra210-iqc-oot-objs		:= tegra210_iqc.o
++snd-soc-tegra186-asrc-oot-objs		:= tegra186_asrc.o
++snd-soc-tegra186-arad-oot-objs		:= tegra186_arad.o
++snd-soc-tegra210-ope-oot-objs		:= tegra210_ope.o tegra210_peq.o \
+ 					   tegra210_mbdrc.o
+-snd-soc-tegra-machine-driver-objs	:= tegra_machine_driver.o
++snd-soc-tegra-machine-driver-oot-objs	:= tegra_machine_driver.o
+ 
+-obj-m += snd-soc-tegra-utils.o
+-obj-m += snd-soc-tegra210-dmic.o
+-obj-m += snd-soc-tegra210-ahub.o
+-obj-m += snd-soc-tegra210-i2s.o
+-obj-m += snd-soc-tegra186-dspk.o
+-obj-m += snd-soc-tegra210-admaif.o
+-obj-m += snd-soc-tegra210-amx.o
+-obj-m += snd-soc-tegra210-adx.o
+-obj-m += snd-soc-tegra210-mixer.o
+-obj-m += snd-soc-tegra210-sfc.o
+-obj-m += snd-soc-tegra210-afc.o
+-obj-m += snd-soc-tegra210-mvc.o
+-obj-m += snd-soc-tegra210-iqc.o
+-obj-m += snd-soc-tegra210-ope.o
+-obj-m += snd-soc-tegra186-arad.o
+-obj-m += snd-soc-tegra186-asrc.o
+-obj-m += snd-soc-tegra-machine-driver.o
++obj-m += snd-soc-tegra-utils-oot.o
++obj-m += snd-soc-tegra210-dmic-oot.o
++obj-m += snd-soc-tegra210-ahub-oot.o
++obj-m += snd-soc-tegra210-i2s-oot.o
++obj-m += snd-soc-tegra186-dspk-oot.o
++obj-m += snd-soc-tegra210-admaif-oot.o
++obj-m += snd-soc-tegra210-amx-oot.o
++obj-m += snd-soc-tegra210-adx-oot.o
++obj-m += snd-soc-tegra210-mixer-oot.o
++obj-m += snd-soc-tegra210-sfc-oot.o
++obj-m += snd-soc-tegra210-afc-oot.o
++obj-m += snd-soc-tegra210-mvc-oot.o
++obj-m += snd-soc-tegra210-iqc-oot.o
++obj-m += snd-soc-tegra210-ope-oot.o
++obj-m += snd-soc-tegra186-arad-oot.o
++obj-m += snd-soc-tegra186-asrc-oot.o
++obj-m += snd-soc-tegra-machine-driver-oot.o
+-- 
+2.34.1
+
