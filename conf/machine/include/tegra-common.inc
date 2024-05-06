@@ -17,17 +17,18 @@ UBOOT_EXTLINUX_KERNEL_ARGS ?= "${KERNEL_ARGS}"
 UBOOT_EXTLINUX_INITRD ?= "${@'/boot/initrd' if d.getVar('INITRAMFS_IMAGE') != '' and d.getVar('INITRAMFS_IMAGE_BUNDLE') != '1' else ''}"
 
 TEGRA_BOOTCONTROL_OVERLAYS ?= "L4TConfiguration.dtbo"
-TEGRA_BOOTCONTROL_OVERLAYS += "${@'L4TConfiguration-RootfsRedundancyLevelABEnable.dtbo' if bb.utils.to_boolean(d.getVar('USE_REDUNDANT_FLASH_LAYOUT')) else ''}"
 TEGRA_PLUGIN_MANAGER_OVERLAYS ??= ""
+TEGRA_DCE_OVERLAYS ??= ""
 # The following variable is deprecated; add new overlays
 # to one of the above instead.
 OVERLAY_DTB_FILE ?= ""
 
 TNSPEC_MACHINE ??= "${MACHINE}"
-TNSPEC_BOOTDEV_DEFAULT ??= "mmcblk0p1"
+TNSPEC_BOOTDEV_DEFAULT ??= "mmcblk3p1"
 TNSPEC_BOOTDEV ??= "${TNSPEC_BOOTDEV_DEFAULT}"
 
-PREFERRED_PROVIDER_virtual/kernel ?= "linux-tegra"
+PREFERRED_PROVIDER_virtual/kernel ?= "linux-jammy-nvidia-tegra"
+PREFERRED_PROVIDER_virtual/dtb ?= "nvidia-kernel-oot"
 PREFERRED_PROVIDER_virtual/bootloader ?= "edk2-firmware-tegra"
 OPTEE_MM_PROVIDER = "${@'tegra-uefi-prebuilt' if d.getVar('PREFERRED_PROVIDER_virtual/bootloader') == 'tegra-uefi-prebuilt' else 'standalone-mm-optee-tegra'}"
 PREFERRED_PROVIDER_standalone-mm-optee-tegra ?= "${OPTEE_MM_PROVIDER}"
@@ -80,12 +81,12 @@ TEGRAFLASH_NO_INTERNAL_STORAGE ?= "0"
 UBOOT_EXTLINUX ?= "1"
 TEGRA_ESSENTIAL_EXTRA_RDEPENDS ?= "${@'l4t-launcher-extlinux' if d.getVar('UBOOT_EXTLINUX') == '1' else ''}"
 MACHINE_FEATURES = "alsa usbhost pci rtc cuda ext2"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "tegra-firmware ${TEGRA_ESSENTIAL_EXTRA_RDEPENDS}"
-MACHINE_EXTRA_RDEPENDS = "tegra-nvphs tegra-nvs-service tegra-nvsciipc tegra-nvstartup tegra-nvfancontrol tegra-configs-udev tegra-redundant-boot"
-MACHINE_EXTRA_RRECOMMENDS = "kernel-module-nvgpu \
-			   kernel-module-snd-hda-tegra kernel-module-snd-hda-codec-hdmi kernel-module-ina3221 \
-                           kernel-module-tegra-bpmp-thermal kernel-module-spi-tegra114 kernel-module-ahci \
-                           kernel-module-max77620-thermal kernel-module-pwm-fan"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "tegra-firmware ${TEGRA_ESSENTIAL_EXTRA_RDEPENDS} nvidia-kernel-oot-base"
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "kernel-module-ina3221 kernel-module-lm90 kernel-module-tegra-bpmp-thermal kernel-module-spi-tegra114 kernel-module-pwm-fan \
+                                       kernel-module-governor-userspace kernel-module-ucsi-ccg kernel-module-pcie-tegra194 kernel-module-phy-tegra194-p2u \
+                                       kernel-module-nvme kernel-module-pwm-tegra kernel-module-tegra-xudc"
+MACHINE_EXTRA_RDEPENDS = "tegra-nvphs tegra-nvs-service tegra-nvsciipc tegra-nvstartup tegra-nvfancontrol tegra-configs-udev tegra-redundant-boot nvidia-kernel-oot-display"
+MACHINE_EXTRA_RRECOMMENDS = "kernel-module-snd-hda-tegra kernel-module-snd-hda-codec-hdmi nvidia-kernel-oot-cameras nvidia-kernel-oot-canbus"
 MACHINE_HWCODECS = "gstreamer1.0-plugins-nvvideo4linux2"
 
 PREFERRED_PROVIDER_virtual/xserver ?= "xserver-xorg"
