@@ -1,0 +1,48 @@
+From 5a7590d763a928f6b890949af604a52e24770229 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Mon, 6 May 2024 17:50:44 +0100
+Subject: [PATCH] OE cross build fixups
+
+Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
+---
+ ivi-id-agent-modules/ivi-id-agent/CMakeLists.txt      | 2 +-
+ ivi-input-modules/ivi-input-controller/CMakeLists.txt | 2 +-
+ weston-ivi-shell/CMakeLists.txt                       | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/ivi-id-agent-modules/ivi-id-agent/CMakeLists.txt b/ivi-id-agent-modules/ivi-id-agent/CMakeLists.txt
+index efb516b..8bddab9 100644
+--- a/ivi-id-agent-modules/ivi-id-agent/CMakeLists.txt
++++ b/ivi-id-agent-modules/ivi-id-agent/CMakeLists.txt
+@@ -66,5 +66,5 @@ target_link_libraries(${PROJECT_NAME} ${LIBS})
+ 
+ install (
+     TARGETS             ${PROJECT_NAME}
+-    LIBRARY DESTINATION ${WESTON_LIBDIR}/weston
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/weston
+ )
+diff --git a/ivi-input-modules/ivi-input-controller/CMakeLists.txt b/ivi-input-modules/ivi-input-controller/CMakeLists.txt
+index 62b08c8..c415965 100644
+--- a/ivi-input-modules/ivi-input-controller/CMakeLists.txt
++++ b/ivi-input-modules/ivi-input-controller/CMakeLists.txt
+@@ -91,5 +91,5 @@ target_link_libraries(${PROJECT_NAME} ${LIBS})
+ 
+ install (
+     TARGETS             ${PROJECT_NAME}
+-    LIBRARY DESTINATION ${WESTON_LIBDIR}/weston
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/weston
+ )
+diff --git a/weston-ivi-shell/CMakeLists.txt b/weston-ivi-shell/CMakeLists.txt
+index 2868481..06c3935 100644
+--- a/weston-ivi-shell/CMakeLists.txt
++++ b/weston-ivi-shell/CMakeLists.txt
+@@ -89,5 +89,5 @@ target_link_libraries(${PROJECT_NAME} ${LIBS})
+ 
+ install (
+     TARGETS             ${PROJECT_NAME}
+-    LIBRARY DESTINATION ${WESTON_LIBDIR}/weston
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/weston
+ )
+-- 
+2.34.1
+
