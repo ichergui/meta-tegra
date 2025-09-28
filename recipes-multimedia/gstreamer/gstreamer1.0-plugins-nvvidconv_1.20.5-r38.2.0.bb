@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://nvbufsurface.h;endline=9;md5=b70b4690c724372d6d0fe6c1
 "
 
 TEGRA_SRC_SUBARCHIVE = "Linux_for_Tegra/source/gst-nvvidconv_src.tbz2"
-require recipes-bsp/tegra-sources/tegra-sources-36.5.0.inc
+require recipes-bsp/tegra-sources/tegra-sources-38.2.0.inc
 
 DEPENDS = "gstreamer1.0 glib-2.0 gstreamer1.0-plugins-base tegra-libraries-multimedia tegra-mmapi cuda-driver cuda-cudart"
 

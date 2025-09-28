@@ -1,6 +1,6 @@
 L4T_BSP_NAME = "${L4T_SRCS_NAME}"
 SRC_URI = "${L4T_URI_BASE}/public_sources.tbz2;downloadfilename=${L4T_BSP_PREFIX}-public_sources-${L4T_VERSION}.tbz2"
-SRC_URI[sha256sum] = "d0acb2187786d6ba9f012dd72ee7005309903944c4e8f3d649d7dabd3aebba42"
+SRC_URI[sha256sum] = "3244801d7cc08412984035455fbebee9abcff25e37f57494acea7e0e78449c38"
 
 inherit l4t_bsp
 

@@ -6,7 +6,7 @@ SRC_URI = "\
     ${L4T_URI_BASE}/${L4T_BSP_PREFIX}_Linux_R${L4T_VERSION}_aarch64.tbz2 \
 "
 
-SRC_URI[sha256sum] = "414e58d97ac4b84fb02cbca621d46598f0bc8b811b6b9c3ad778b04e8d321ca7"
+SRC_URI[sha256sum] = "bef352597d8ebcb1bedff1f2abef5957dbd34faa8c8cff7d9d1e576c18c7a46d"
 
 inherit l4t_bsp dos2unix
 
