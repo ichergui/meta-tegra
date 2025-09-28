@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=7c5177a0e72658a405eafbb17693804b \
 TEGRA_SRC_SUBARCHIVE = "Linux_for_Tegra/source/gst-nvunixfd_src.tbz2"
 require recipes-bsp/tegra-sources/tegra-sources-38.2.0.inc
 
-DEPENDS = "gstreamer1.0 glib-2.0 gstreamer1.0-plugins-base tegra-mmapi cuda-driver cuda-cudart"
+DEPENDS = "gstreamer1.0 glib-2.0 gstreamer1.0-plugins-base tegra-mmapi cuda-cudart"
 
 SRC_URI += " file://0001-Update-makefile-for-OE-builds.patch"
 S = "${UNPACKDIR}/gst-nvunixfd"
@@ -17,6 +17,8 @@ inherit pkgconfig features_check
 EXTRA_OEMAKE = "CUDA_VER=${CUDA_VERSION}"
 
 REQUIRED_DISTRO_FEATURES = "opengl"
+
+EXTRA_OEMAKE = "CUDA_VER=${CUDA_VERSION}"
 
 do_install() {
 	oe_runmake install DESTDIR="${D}"
