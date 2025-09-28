@@ -1,7 +1,7 @@
-From 68a3cb773aae35bda24fe49c2f20a1aced82ad0d Mon Sep 17 00:00:00 2001
-From: Matt Madison <matt@madison.systems>
-Date: Fri, 20 Feb 2026 08:22:10 -0800
-Subject: [PATCH 17/59] conftest: work around stringify issue with
+From 2e9d4484b62634f768c323aeb7bb47795d9f1ae1 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Mon, 11 Aug 2025 16:48:22 +0100
+Subject: [PATCH 6/6] conftest: work around stringify issue with
  __assign_str_has_no_src_arg test
 
 The kernel trace headers using preprocessor stringification on the
@@ -29,11 +29,11 @@ Signed-off-by: Matt Madison <matt@madison.systems>
  scripts/conftest/conftest.sh | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/scripts/conftest/conftest.sh b/scripts/conftest/conftest.sh
-index 781ae90b..801535c0 100755
---- a/scripts/conftest/conftest.sh
-+++ b/scripts/conftest/conftest.sh
-@@ -6470,6 +6470,7 @@ compile_test() {
+diff --git a/nvidia-oot/scripts/conftest/conftest.sh b/nvidia-oot/scripts/conftest/conftest.sh
+index 512b381..cd52a80 100755
+--- a/nvidia-oot/scripts/conftest/conftest.sh
++++ b/nvidia-oot/scripts/conftest/conftest.sh
+@@ -6478,6 +6478,7 @@ compile_test() {
          __assign_str_has_no_src_arg)
              #
              echo "
@@ -42,5 +42,5 @@ index 781ae90b..801535c0 100755
              #define TRACE_INCLUDE_PATH ${PWD}
  
 -- 
-2.43.0
+2.34.1
 
