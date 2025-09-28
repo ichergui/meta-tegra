@@ -12,11 +12,11 @@ SRC_SOC_DEBS += "\
 SRC_COMMON_DEBS += "\
     ${@l4t_deb_pkgname(d, 'gstreamer')};subdir=${BP}/full;name=gstreamer \
 "
-MAINSUM = "03069358ddda34be5884740d49c0dd8a5154571a0086074376fe1809be4d9d91"
-SRC_URI[camera.sha256sum] = "7b54e62ce54b09288da4f2d92faf8ad5c3e399fb1e45c31f5e2d654368008f0d"
-SRC_URI[gstreamer.sha256sum] = "188189e005aeb9445aa33134573056cf82b203a989c33e75fa6798fb8265e3e8"
-SRC_URI[wayland.sha256sum] = "9daf43bf3bc84b66a7253a1a35785b8c1498d66bad0ddf69c0b2d8ac3f2c3240"
-SRC_URI[weston.sha256sum] = "c386592dc47d7b34c1017b2a8210054da24ad7cf19021a63fc25f5c13a6267eb"
+MAINSUM = "01df66107ccc771bdfa22b0772c6cc49406b2ef53401148dacf556127bbbb81e"
+SRC_URI[camera.sha256sum] = "a090471986756c28297c40be9598b9e0116db68c868f3ccd32ccea3ae4462287"
+SRC_URI[gstreamer.sha256sum] = "c1ed76fd652e5a540be17facde291858885f6bb84862ef22776085b9da857650"
+SRC_URI[wayland.sha256sum] = "d31380c1906a9b3aacaa4be09fb0266da0aa2deaead86d512e7671b30d38fbea"
+SRC_URI[weston.sha256sum] = "8cc2522c2c47e30ffef2d69c313ccf7569c7d9825b04bc023da1e43ae77bb0a2"
 
 PASSTHRU_ROOT = "${datadir}/nvidia-container-passthrough"
 
@@ -26,7 +26,7 @@ do_install() {
     cp -R --preserve=mode,links,timestamps ${S}/full/usr/lib/aarch64-linux-gnu ${D}${PASSTHRU_ROOT}/usr/lib/
     # Just the V4L2 files for the multimedia package
     cp -R --preserve=mode,links,timestamps ${S}/usr/lib/aarch64-linux-gnu/libv4l ${D}${PASSTHRU_ROOT}/usr/lib/aarch64-linux-gnu/
-    for f in libnvv4l2.so libnvv4lconvert.so libv4l2_nvvideocodec.so libv4l2_nvcuvidvideocodec.so libv4l2_nvargus.so; do
+    for f in libnvv4l2.so libnvv4lconvert.so libv4l2_nvargus.so; do
         install -m 0644 ${S}/usr/lib/aarch64-linux-gnu/nvidia/$f ${D}${PASSTHRU_ROOT}/usr/lib/aarch64-linux-gnu/nvidia/
     done
     ln -sf libnvv4l2.so ${D}${PASSTHRU_ROOT}/usr/lib/aarch64-linux-gnu/nvidia/libv4l2.so.0

@@ -4,7 +4,7 @@ L4T_DEB_COPYRIGHT_MD5 = "cf5e527faa5ef67c91ec75b7f6c501e7"
 DEPENDS = "\
 	glib-2.0 \
 	gstreamer1.0-plugins-base \
-	tegra-libraries-multimedia tegra-libraries-multimedia-utils \
+	tegra-libraries-multimedia tegra-libraries-multimedia-utils tegra-libraries-camera \
 	${@bb.utils.contains('DISTRO_FEATURES', ['x11', 'alsa'], 'virtual/libx11 alsa-lib', '', d)} \
 	libdrm virtual/egl virtual/libgles2 \
 "

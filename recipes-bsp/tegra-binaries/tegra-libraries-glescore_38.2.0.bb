@@ -5,7 +5,7 @@ L4T_DEB_TRANSLATED_BPN = "nvidia-l4t-3d-core"
 
 require tegra-debian-libraries-common.inc
 
-MAINSUM = "910b16711cd14f39699475e42c1e9316ad5a6cf725b9142f5ebb96af7bcf49d7"
+MAINSUM = "598f103e1e01aad3659578ed4112297a7390976f3eac4ce65ebcb41f445cabaf"
 
 TEGRA_LIBRARIES_TO_INSTALL = "\
     tegra-egl/libGLESv1_CM_nvidia.so.1 \

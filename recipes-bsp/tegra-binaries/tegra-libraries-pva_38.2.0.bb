@@ -3,10 +3,12 @@ DEPENDS = "tegra-libraries-core tegra-libraries-nvsci tegra-libraries-cuda"
 
 require tegra-debian-libraries-common.inc
 
-MAINSUM = "8f03378a8aaacb76400ff67c2461444030acffc2839ec72a553e2cdf539d8a44"
+MAINSUM = "a721d6a39897803f17b946ecb3e071a7d275221e43e4564acc93ccd7e4711fcb"
 
 TEGRA_LIBRARIES_TO_INSTALL = "\
     nvidia/libnvpvaintf.so \
+    nvidia/libnvpvaumd_cuda.so \
+    nvidia/libnvpvaumd_core.so \
 "
 FILES_SOLIBSDEV = ""
 SOLIBS = ".so*"
