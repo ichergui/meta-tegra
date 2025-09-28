@@ -1,8 +1,7 @@
-From 05324ab4f4afb04a86b6931ca00159dfa7a2fd7c Mon Sep 17 00:00:00 2001
-From: Matt Madison <3137284+madisongh@users.noreply.github.com>
-Date: Tue, 10 Feb 2026 12:44:56 -0800
-Subject: [PATCH 4/6] fix(XusbControllerDxe): use BaseMemoryLib functions
- (#148)
+From 8bbf8cb436aa701ec6118decf0d41c1bb88bfcaa Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
+Date: Sat, 12 Oct 2024 07:09:37 -0700
+Subject: [PATCH 4/4] XusbControllerDxe: use BaseMemoryLib functions
 
 instead of memcpy/memset from the C runtime library.
 

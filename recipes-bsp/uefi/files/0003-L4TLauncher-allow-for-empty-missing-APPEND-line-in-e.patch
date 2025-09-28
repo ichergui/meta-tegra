@@ -5,7 +5,6 @@ Subject: [PATCH 5/6] fix(L4TLauncher): allow for empty/missing APPEND line in
  extlinux.conf (#149)
 
 Upstream-Status: Backport [https://github.com/NVIDIA/edk2-nvidia/pull/149]
-
 Signed-off-by: Matt Madison <matt@madison.systems>
 ---
  .../Application/L4TLauncher/L4TLauncher.c     | 30 ++++++++++---------

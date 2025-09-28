@@ -11,16 +11,18 @@ TEGRA_UEFI_SIGNING_CLASS ??= "tegra-uefi-signing"
 inherit l4t_bsp deploy ${TEGRA_UEFI_SIGNING_CLASS}
 
 EDK2_PLATFORM_DSC = "Platform/NVIDIA/NVIDIA.common.dsc"
-TEGRA_EDK2_PLATFORM ??= "UNKNOWN"
-TEGRA_EDK2_CONFIGURATION ??= "general"
+TEGRA_EDK2_PLATFORM = "UNKNOWN"
+TEGRA_EDK2_PLATFORM:tegra234 = "t23x"
+TEGRA_EDK2_PLATFORM:tegra264 = "t26x"
+TEGRA_EDK2_CONFIGURATION ?= "general"
 EDK2_PLATFORM = "${TEGRA_EDK2_PLATFORM}_${TEGRA_EDK2_CONFIGURATION}"
-TEGRA_FLASHVAR_UEFI_IMAGE ??= "uefi_${EDK2_PLATFORM}"
 EDK2_BIN_NAME = "uefi_${EDK2_PLATFORM}.bin"
 
 SRC_URI += "file://nvbuildconfig.py"
 
 do_configure:append() {
-    ${PYTHON} ${UNPACKDIR}/nvbuildconfig.py --kconfig-path=${S_EDK2_NVIDIA}/Platform/NVIDIA/Kconfig --output-dir=${B}/nvidia-config/Tegra/${EDK2_PLATFORM} ${S_EDK2_NVIDIA}/Platform/NVIDIA/Tegra/DefConfigs/${EDK2_PLATFORM}.defconfig ${@config_fragments(d)}
+    mkdir -p ${B}/nvidia-config/Tegra/${EDK2_PLATFORM}
+    ${PYTHON} ${UNPACKDIR}/nvbuildconfig.py ${S_EDK2_NVIDIA}/Platform/NVIDIA/Kconfig ${S_EDK2_NVIDIA}/Platform/NVIDIA/Tegra/DefConfigs/${EDK2_PLATFORM}.defconfig ${B}/nvidia-config/Tegra/${EDK2_PLATFORM}
 }
 
 def fmp_lowest_version(d):
