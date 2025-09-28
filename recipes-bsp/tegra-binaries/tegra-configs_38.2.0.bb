@@ -8,16 +8,19 @@ require tegra-debian-libraries-common.inc
 SRC_SOC_DEBS += "\
     ${@l4t_deb_pkgname(d, 'init')};subdir=${BP};name=init \
     ${@l4t_deb_pkgname(d, 'x11')};subdir=${BP};name=x11 \
+    ${@l4t_deb_pkgname(d, 'init-openrm')};subdir=${BP};name=openrm \
 "
 
-MAINSUM = "ed02bf5d415d37e358d07d7651aa36972c289f7dc45be8ff6a76d230b6f8bfa1"
-INITSUM = "083a9eb9b4625073309f467d4a85833efd7698a76a175a1bc40584a8a9a5d7c6"
-X11SUM = "d5ea833d39b2b0dd2144ef18f510c356055dfb4831caf5a139a82e22d77a1893"
+MAINSUM = "576a653a065b1bf850644f189bce3a2760b0ea33c300feff954a958b61b4f054"
+INITSUM = "2fb9b0ce47bd0649ecd86cbd7fcc20c87e158924701268787bc7fd5fa86bbddb"
+X11SUM = "cfd618c410b59be7846905111902decae1c0e48d37d53c2d58436aff8524447d"
+OPENRMSUM = "4f28f60fd0468b1c5d97b79024051646c52cadc16859f929326a238289563a06"
 SRC_URI[init.sha256sum] = "${INITSUM}"
 SRC_URI[x11.sha256sum] = "${X11SUM}"
+SRC_URI[openrm.sha256sum] = "${OPENRMSUM}"
 
 SRC_URI += "\
-    file://0001-Patch-nv.sh-script-for-OE-use.patch \
+    file://0001-Patch-nv-graphics.sh-script-for-OE-use.patch \
     file://nv-l4t-bootloader-config.sh \
     file://devices.csv \
     file://drivers.csv \
@@ -25,7 +28,7 @@ SRC_URI += "\
 
 do_install() {
     install -d ${D}${sbindir}
-    install -m 0755 ${S}/etc/systemd/nv.sh ${D}${sbindir}/nvstartup
+    install -m 0755 ${S}/etc/systemd/nv-graphics.sh ${D}${sbindir}/nvstartup
     install -d ${D}/${sysconfdir}/udev/rules.d
     install -m 0644 ${S}/etc/udev/rules.d/99-tegra-devices.rules ${D}${sysconfdir}/udev/rules.d
     install -m 0644 ${S}/etc/udev/rules.d/99-tegra-mmc-ra.rules ${D}${sysconfdir}/udev/rules.d
@@ -36,13 +39,8 @@ do_install() {
 
     install -d ${D}${sysconfdir}/X11
 
-    install -m 0644 ${S}/etc/enctune.conf ${D}${sysconfdir}
-
-    install -d ${D}${sysconfdir}/sysctl.d
-    install -m 0644 ${S}/etc/sysctl.d/60-nvsciipc.conf ${D}${sysconfdir}/sysctl.d/
-
     install -d ${D}${sysconfdir}/modprobe.d
-    install -m 0644 ${S}/etc/modprobe.d/denylist*.conf ${D}${sysconfdir}/modprobe.d/
+    install -m 0644 ${S}/etc/modprobe.d/nvidia-unifiedgpudisp.conf ${D}${sysconfdir}/modprobe.d/
 
     # We use a statically generated file by using 
     # https://gist.github.com/dwalkes/0e2dea422f2df93bcc9badc0512a6855
@@ -62,10 +60,15 @@ do_install:append:tegra234() {
     install -m 0644 ${S}/etc/X11/xorg.conf.d/tegra-drm-outputclass.conf ${D}${sysconfdir}/X11/xorg.conf.d
 }
 
-PACKAGES = "${PN}-udev ${PN}-omx-tegra ${PN}-xorg ${PN}-nvstartup ${PN}-container-csv ${PN}-bootloader"
+do_install:append:tegra264() {
+    install -m 0644 ${S}/etc/X11/xorg.conf.pci ${D}${sysconfdir}/X11/xorg.conf
+    install -d ${D}${sysconfdir}/X11/xorg.conf.d
+    install -m 0644 ${S}/etc/X11/xorg.conf.d/tegra-drm-outputclass.conf ${D}${sysconfdir}/X11/xorg.conf.d
+}
+
+PACKAGES = "${PN}-udev ${PN}-xorg ${PN}-nvstartup ${PN}-container-csv ${PN}-bootloader"
 FILES:${PN}-udev = "${sysconfdir}/udev/rules.d ${sysconfdir}/modprobe.d"
 FILES:${PN}-xorg = "${sysconfdir}/X11"
-FILES:${PN}-omx-tegra = "${sysconfdir}/enctune.conf"
 FILES:${PN}-nvstartup = "${sbindir} ${sysconfdir}/sysctl.d"
 FILES:${PN}-container-csv = "${sysconfdir}/nvidia-container-runtime"
 FILES:${PN}-bootloader = "/opt/nvidia/l4t-bootloader-config"

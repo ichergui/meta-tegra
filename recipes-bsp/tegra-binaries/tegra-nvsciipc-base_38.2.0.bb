@@ -10,14 +10,13 @@ SRC_SOC_DEBS += "\
     ${@l4t_deb_pkgname(d, 'init')};subdir=${BP};name=init \
 "
 
-MAINSUM = "3441c25d17b1513d68cb21faa25a1e40dc4811b590c3c806e61a78d6d029ffe3"
-INITSUM = "083a9eb9b4625073309f467d4a85833efd7698a76a175a1bc40584a8a9a5d7c6"
+MAINSUM = "2b985d1a7943b92888fcc150b0f5364f56edba0529c05d2e3993cb5793819d66"
+INITSUM = "2fb9b0ce47bd0649ecd86cbd7fcc20c87e158924701268787bc7fd5fa86bbddb"
 SRC_URI[init.sha256sum] = "${INITSUM}"
 
 do_install() {
     install -d ${D}${bindir} ${D}${sysconfdir}
     install -m 0755 ${S}/usr/bin/nvsciipc_init ${D}${bindir}/
-    install -m 0644 ${S}/etc/nvsciipc.cfg ${D}${sysconfdir}/
 }
 
 PACKAGES = "${PN}"

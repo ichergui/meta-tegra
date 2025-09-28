@@ -6,7 +6,7 @@ L4T_DEB_TRANSLATED_BPN = "nvidia-l4t-cuda-utils"
 
 require tegra-debian-libraries-common.inc
 
-MAINSUM = "a7f4841b11f4c4cd15508491883a134a86a6c513a92ba57cb8eb35444991732a"
+MAINSUM = "817ce42e9d6e22199e680d0046f7bab398c3b745dd4dbf9140d4ee125825a3cb"
 
 do_install() {
     install -d ${D}${bindir}

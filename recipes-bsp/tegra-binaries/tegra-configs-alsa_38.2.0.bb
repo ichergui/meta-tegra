@@ -5,7 +5,7 @@ L4T_DEB_TRANSLATED_BPN = "nvidia-l4t-init"
 
 require tegra-debian-libraries-common.inc
 
-MAINSUM = "083a9eb9b4625073309f467d4a85833efd7698a76a175a1bc40584a8a9a5d7c6"
+MAINSUM = "2fb9b0ce47bd0649ecd86cbd7fcc20c87e158924701268787bc7fd5fa86bbddb"
 
 SRC_URI += "file://asound.conf.tegra-hda-p3767-p3509"
 

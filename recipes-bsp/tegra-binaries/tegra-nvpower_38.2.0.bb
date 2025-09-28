@@ -8,12 +8,11 @@ require tegra-debian-libraries-common.inc
 SRC_SOC_DEBS += "${@l4t_deb_pkgname(d, 'init')};subdir=${BP};name=init"
 SRC_SOC_DEBS += "${@l4t_deb_pkgname(d, 'tools')};subdir=${BP};name=tools"
 
-MAINSUM = "f3c02f74025cd3dadadb1e2dbc97a41963f86462276427c3d578b8cb994c56d6"
-SRC_URI[init.sha256sum] = "083a9eb9b4625073309f467d4a85833efd7698a76a175a1bc40584a8a9a5d7c6"
-SRC_URI[tools.sha256sum] = "3441c25d17b1513d68cb21faa25a1e40dc4811b590c3c806e61a78d6d029ffe3"
+MAINSUM = "5ce971e279e87f9b8d7a1f6f3e040219b54c4f47c90c295d1a2cba083cbff659"
+SRC_URI[init.sha256sum] = "2fb9b0ce47bd0649ecd86cbd7fcc20c87e158924701268787bc7fd5fa86bbddb"
+SRC_URI[tools.sha256sum] = "2b985d1a7943b92888fcc150b0f5364f56edba0529c05d2e3993cb5793819d66"
 
 SRC_URI += "\
-    file://0001-Drop-bc-usage-and-remove-symlink-creation-functions.patch \
     file://nvpower.init \
     file://nvpower.service \
 "
@@ -24,9 +23,7 @@ TEGRA_LIBRARIES_TO_INSTALL = "\
 
 do_install() {
     install_libraries
-    install -d ${D}${libexecdir}
     install -d ${D}${sysconfdir}/nvpower/libjetsonpower
-    install -m 0755 ${B}/etc/systemd/nvpower.sh ${D}${libexecdir}/
     install -m 0644 ${B}/etc/nvpower/libjetsonpower/${NVPOWER}.conf ${D}${sysconfdir}/nvpower/libjetsonpower/
     install -d ${D}${sysconfdir}/init.d
     install -m 0755 ${UNPACKDIR}/nvpower.init ${D}${sysconfdir}/init.d/nvpower
