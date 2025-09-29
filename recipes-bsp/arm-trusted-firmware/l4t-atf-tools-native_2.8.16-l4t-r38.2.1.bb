@@ -1,6 +1,6 @@
 DESCRIPTION = "Trusted Firmware-A fiptool and sptool for packaging (from L4T sources)"
 
-require arm-trusted-firmware-2.8.16-l4t-r38.2.0.inc
+require arm-trusted-firmware-2.8.16-l4t-r38.2.1.inc
 
 B = "${S}"
 

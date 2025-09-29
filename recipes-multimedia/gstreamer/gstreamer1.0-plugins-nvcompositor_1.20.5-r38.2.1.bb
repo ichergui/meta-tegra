@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://gstnvcompositor.h;beginline=64;endline=64;md5=4bc2fab
 
 TEGRA_SRC_SUBARCHIVE = "Linux_for_Tegra/source/gst-nvcompositor_src.tbz2"
 TEGRA_SRC_SUBARCHIVE_OPTS = "--exclude=3rdpartyheaders.tbz2"
-require recipes-bsp/tegra-sources/tegra-sources-38.2.0.inc
+require recipes-bsp/tegra-sources/tegra-sources-38.2.1.inc
 
 COMPATIBLE_MACHINE = "(tegra)"
 

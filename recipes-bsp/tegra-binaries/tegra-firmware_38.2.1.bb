@@ -6,8 +6,8 @@ L4T_DEB_TRANSLATED_BPN = "nvidia-l4t-firmware"
 require tegra-debian-libraries-common.inc
 
 SRC_SOC_DEBS += "${@l4t_deb_pkgname(d, 'firmware-openrm')};subdir=${BP};name=openrm"
-MAINSUM = "9ae877ade10429e5b2c2e4f6c32010252f4876b1ad4cd5dd26df57b67f471c82"
-OPENRMSUM = "ade03b27195ee7478fa1a7fb9f58c7f27ee2892be8e53dc2893ae35f509b364f"
+MAINSUM = "406b309817e0aa71b62996881a46b5f1da39c0007e2e492f56121f726dc0dfff"
+OPENRMSUM = "2258dfccd8b1b1a26ce1588e48fb657fc7d27d2a8d00995a3bd1b8738ced967a"
 SRC_URI[openrm.sha256sum] = "${OPENRMSUM}"
 
 do_install() {

@@ -4,7 +4,7 @@ TEGRA_SRC_SUBARCHIVE = "\
     Linux_for_Tegra/source/nvidia_unified_gpu_display_driver_source.tbz2 \
 "
 TEGRA_SRC_SUBARCHIVE_OPTS = "-C ${UNPACKDIR}/${BPN}"
-require recipes-bsp/tegra-sources/tegra-sources-38.2.0.inc
+require recipes-bsp/tegra-sources/tegra-sources-38.2.1.inc
 
 do_unpack[depends] += "tegra-binaries:do_preconfigure"
 do_unpack[dirs] += "${UNPACKDIR}/${BPN}"

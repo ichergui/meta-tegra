@@ -4,8 +4,8 @@ DEPENDS = "tegra-libraries-core"
 require tegra-debian-libraries-common.inc
 
 SRC_SOC_DEBS += "${@l4t_deb_pkgname(d, '3d-core')};subdir=${BP};name=core3d"
-MAINSUM = "4d117a90895218525bfb19d1dbd673be365485c8f7a66e151a37c21bb5be02f3"
-CORE3DSUM = "598f103e1e01aad3659578ed4112297a7390976f3eac4ce65ebcb41f445cabaf"
+MAINSUM = "5baefb9a8894af6913313cd6c35702980365e3b0c2fb7a39ac2fb1dbc0781ba7"
+CORE3DSUM = "49d5c4d659293d3850f77bae7f5a8888d40ced71abaec585ba40e88ea29fa293"
 SRC_URI[core3d.sha256sum] = "${CORE3DSUM}"
 
 TEGRA_LIBRARIES_TO_INSTALL = "\

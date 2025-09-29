@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=aba133faf68bf941bf17b32a0b50f699 \
                     file://gstnvipcbufferpool.c;endline=10;md5=3f7bca09d7dd300b39cb2536807de1be"
 
 TEGRA_SRC_SUBARCHIVE = "Linux_for_Tegra/source/gst-nvipcpipeline_src.tbz2"
-require recipes-bsp/tegra-sources/tegra-sources-38.2.0.inc
+require recipes-bsp/tegra-sources/tegra-sources-38.2.1.inc
 
 COMPATIBLE_MACHINE = "(tegra)"
 

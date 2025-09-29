@@ -2,7 +2,7 @@ SUMMARY = "Trusted Firmware-A - L4T distribution for Tegra264"
 DESCRIPTION = "Trusted Firmware-A (TF-A) provides a reference implementation of secure world software \
 for Armv7-A and Armv8-A, including a Secure Monitor executing at Exception Level 3 (EL3)."
 
-require arm-trusted-firmware-2.8.16-l4t-r38.2.0.inc
+require arm-trusted-firmware-2.8.16-l4t-r38.2.1.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS:append = " virtual/cross-cc dtc-native l4t-atf-tools-native"

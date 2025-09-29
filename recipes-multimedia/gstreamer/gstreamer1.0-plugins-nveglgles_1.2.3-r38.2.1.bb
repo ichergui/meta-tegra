@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://gst-libs/gst/egl/LICENSE.libgstnvegl-1.0;md5=de0f9dfa
 
 TEGRA_SRC_SUBARCHIVE = "Linux_for_Tegra/source/gstegl_src.tbz2"
 
-require recipes-bsp/tegra-sources/tegra-sources-38.2.0.inc
+require recipes-bsp/tegra-sources/tegra-sources-38.2.1.inc
 
 COMPATIBLE_MACHINE = "(tegra)"
 

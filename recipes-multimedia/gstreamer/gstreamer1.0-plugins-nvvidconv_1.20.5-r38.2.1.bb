@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://nvbufsurface.h;endline=9;md5=b973ef2bfaa397b1e255c76c
 "
 
 TEGRA_SRC_SUBARCHIVE = "Linux_for_Tegra/source/gst-nvvidconv_src.tbz2"
-require recipes-bsp/tegra-sources/tegra-sources-38.2.0.inc
+require recipes-bsp/tegra-sources/tegra-sources-38.2.1.inc
 
 COMPATIBLE_MACHINE = "(tegra)"
 

@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://docs/license.rst;md5=b2c740efedc159745b9b31f88ff03dde
 
 TARGET_SOC ??= "t264"
 TEGRA_SRC_SUBARCHIVE = "Linux_for_Tegra/source/atf_${TARGET_SOC}_src.tbz2"
-require recipes-bsp/tegra-sources/tegra-sources-38.2.0.inc
+require recipes-bsp/tegra-sources/tegra-sources-38.2.1.inc
 
 S = "${UNPACKDIR}/arm-trusted-firmware.${TARGET_SOC}"
 B = "${WORKDIR}/build"

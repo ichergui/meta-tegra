@@ -1,5 +1,5 @@
 require edk2-firmware.inc
-require edk2-firmware-core-tegra-38.2.0.inc
+require edk2-firmware-core-tegra-38.2.1.inc
 require conf/image-uefi.conf
 
 LICENSE .= " & Proprietary"

@@ -4,7 +4,7 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://README.txt;endline=26;md5=d4da79f8cebc6b73ce481b090afa99ae"
 
 TEGRA_SRC_SUBARCHIVE = "Linux_for_Tegra/source/gst-nvtee_src.tbz2"
-require recipes-bsp/tegra-sources/tegra-sources-38.2.0.inc
+require recipes-bsp/tegra-sources/tegra-sources-38.2.1.inc
 
 COMPATIBLE_MACHINE = "(tegra)"
 
