@@ -12,6 +12,7 @@ SRC_URI += "\
            file://0004-Remove-xxd-dependency-from-l4t_sign_image.sh.patch \
            file://0005-Rework-logging-in-l4t_sign_image.sh.patch \
            file://0006-Fix-location-of-bsp_version-file-in-l4t_bup_gen.func.patch \
+           file://0014-Fix-SyntaxWarnings-in-unified-flash-scripts.patch \
            "
 S = "${UNPACKDIR}/Linux_for_Tegra"
 B = "${WORKDIR}/build"
