@@ -5,7 +5,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=6938d70d5e5d49d31049419e85bb82f8"
 
 require optee-l4t.inc
 TEGRA_SRC_SUBARCHIVE_OPTS = "--strip-components=1 optee/samples"
-TEGRA_SRC_SUBARCHIVE_OPTS += "--strip-components=1 optee/optee_os"
 
 SRC_URI += " file://0001-Update-makefiles-for-OE-builds.patch"
 
@@ -24,15 +23,8 @@ EXTRA_OEMAKE += " \
     ${@d.getVar('FTPM_CFG', True) if d.getVar('OPTEE_ENABLE_FTPM') == '1' else ''} \
 "
 
-MS_TPM_SRC = "${S}/ms-tpm-20-ref/Samples/ARM32-FirmwareTPM/optee_ta"
-OPTEE_OS_S = "${UNPACKDIR}/optee_os"
-
 do_compile() {
     oe_runmake -C ${S} all
-
-    if [ "${OPTEE_ENABLE_FTPM}" = "1" ]; then
-        oe_runmake -C "${MS_TPM_SRC}" CFG_TA_MEASURED_BOOT=y CFG_USE_PLATFORM_EPS=y OPTEE_OS_DIR=${OPTEE_OS_S}
-    fi
 }
 do_compile[cleandirs] = "${B}"
 
@@ -47,19 +39,22 @@ do_install() {
 
     if [ "${OPTEE_ENABLE_FTPM}" = "1" ]; then
         install -D -m 0755 ${B}/early_ta/ftpm-helper/a6a3a74a-77cb-433a-990c-1dfb8a3fbc4c.stripped.elf -t ${D}${includedir}/optee/early_ta/ftpm-helper
-        install -D -m 0755 ${B}/early_ta/ms-tpm/bc50d971-d4c9-42c4-82cb-343fb7f37896.stripped.elf -t ${D}${includedir}/optee/early_ta/ms-tpm
         oe_runmake -C ${S}/ftpm-helper/host install DESTDIR="${D}"
     fi
+
+    oe_runmake -C ${S}/pkcs11-sample/host install DESTDIR="${D}"
 }
 
-PACKAGES =+ "${PN}-luks-srv ${PN}-hwkey-agent ${@d.getVar('PN') + '-ftpm-helper' if d.getVar('OPTEE_ENABLE_FTPM') == '1' else ''}"
+PACKAGES =+ "${PN}-luks-srv ${PN}-hwkey-agent ${PN}-pkcs11-sample ${@d.getVar('PN') + '-ftpm-helper' if d.getVar('OPTEE_ENABLE_FTPM') == '1' else ''}"
 FILES:${PN}-hwkey-agent = "${nonarch_base_libdir}/optee_armtz/82154947-c1bc-4bdf-b89d-04f93c0ea97c.ta ${sbindir}/nvhwkey-app"
 FILES:${PN}-luks-srv = "${sbindir}/nvluks-srv-app"
 FILES:${PN}-ftpm-helper = "${sbindir}/nvftpm-helper-app"
+FILES:${PN}-pkcs11-sample = "${sbindir}/nvpkcs11-sample-app"
 ALLOW_EMPTY:${PN} = "1"
 RDEPENDS:${PN} = " \
     ${PN}-luks-srv \
     ${PN}-hwkey-agent \
+    ${PN}-pkcs11-sample \
     ${@ \
         d.getVar('PN') + '-ftpm-helper' \
         + ' kernel-module-tpm-ftpm-tee' \
