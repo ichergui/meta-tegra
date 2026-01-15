@@ -6,11 +6,11 @@ require optee-os-l4t.inc
 
 CVE_PRODUCT = "linaro:op-tee op-tee:op-tee_os"
 
-DEPENDS += "optee-nvsamples"
+DEPENDS += "optee-nvsamples optee-ftpm"
 
 EARLY_TA_PATHS_FTPM = " \
                         ${STAGING_INCDIR}/optee/early_ta/ftpm-helper/a6a3a74a-77cb-433a-990c-1dfb8a3fbc4c.stripped.elf \
-                        ${STAGING_INCDIR}/optee/early_ta/ms-tpm/bc50d971-d4c9-42c4-82cb-343fb7f37896.stripped.elf \
+                        ${STAGING_INCDIR}/optee/early_ta/optee_ftpm/bc50d971-d4c9-42c4-82cb-343fb7f37896.stripped.elf' \
 "
 
 EXTRA_OEMAKE += "\
