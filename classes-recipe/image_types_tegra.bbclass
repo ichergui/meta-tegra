@@ -310,6 +310,10 @@ tegraflash_populate_package() {
     fi
     cp "${DEPLOY_DIR_IMAGE}/${TEGRA_FLASHVAR_UEFI_IMAGE}.bin" ./${TEGRA_FLASHVAR_UEFI_IMAGE}.bin
     cp "${DEPLOY_DIR_IMAGE}/${TEGRA_FLASHVAR_RCM_UEFI_IMAGE}.bin" ./${TEGRA_FLASHVAR_RCM_UEFI_IMAGE}.bin
+    if [ "${SOC_FAMILY}" = "tegra264" ]; then
+        cp "${DEPLOY_DIR_IMAGE}/standalonemm_jetson.pkg" ./standalonemm_jetson.pkg
+        cp "${DEPLOY_DIR_IMAGE}/hafnium_t264.fip" ./hafnium_t264.fip
+    fi
     cp "${DEPLOY_DIR_IMAGE}/tos-${MACHINE}.img" ./${TOSIMGFILENAME}
     for f in ${TEGRA_STAGED_BOOT_FIRMWARE}; do
         cp "${STAGING_DATADIR}/tegraflash/$f" .
@@ -453,7 +457,7 @@ IMAGE_CMD:tegraflash-tar = "create_tegraflash_pkg"
 do_image_tegraflash_tar[depends] += "dtc-native:do_populate_sysroot coreutils-native:do_populate_sysroot \
                                  tegra-flashtools-native:do_populate_sysroot gptfdisk-native:do_populate_sysroot \
                                  tegra-bootfiles:do_populate_sysroot tegra-bootfiles:do_populate_lic \
-                                 virtual/kernel:do_deploy \
+                                 ${TEGRA_RCM_EDK2_DEPENDS} virtual/kernel:do_deploy \
                                  ${@'${INITRD_IMAGE}:do_image_complete' if d.getVar('INITRD_IMAGE') != '' else  ''} \
                                  ${@'${TEGRA_ESP_IMAGE}:do_image_complete' if d.getVar('TEGRA_ESP_IMAGE') != '' else  ''} \
                                  virtual/secure-os:do_deploy ${TEGRA_SIGNING_EXTRA_DEPS} ${DTB_EXTRA_DEPS} \
