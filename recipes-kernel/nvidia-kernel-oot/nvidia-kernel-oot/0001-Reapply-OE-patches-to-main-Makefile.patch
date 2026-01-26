@@ -14,15 +14,12 @@ Subject: [PATCH] Makefile: update for OE builds
   to prevent some compilation failures due gcc warning-to-error
   changes in later versions of the compiler
 
-* Fix build warning on rtl8852ce driver
-
 Upstream-Status: Pending
 Signed-off-by: Matt Madison <matt@madison.systems>
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
 ---
- Makefile                                      | 78 +++++++++++--------
- .../phy/rf/halrf_8852c/halrf_ops_rtl8852c.h   |  8 +-
- 2 files changed, 49 insertions(+), 37 deletions(-)
+ Makefile | 78 +++++++++++++++++++++++++++++---------------------------
+ 1 file changed, 41 insertions(+), 37 deletions(-)
 
 diff --git a/Makefile b/Makefile
 index 24ee6c5..b915c67 100644
