@@ -1,14 +1,14 @@
-From e78c507201d08d8839be3c5d0a8653f130385a48 Mon Sep 17 00:00:00 2001
-From: Ilies CHERGUI <ichergui@nvidia.com>
+From 380cefa8e7b87e7dcca37a27d784715276bae351 Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
 Date: Wed, 16 Apr 2025 19:41:34 +0100
-Subject: [PATCH 2/3] weston-dmabuf-formats cross-build fixes
+Subject: [PATCH] weston-dmabuf-formats cross-build fixes
 
 Upstream-Status: Inappropriate [OE specific]
 
 Signed-off-by: Matt Madison <matt@madison.systems>
 ---
- .../weston-dmabuf-formats/Makefile            | 42 +++++++++++++++----
- 1 file changed, 35 insertions(+), 7 deletions(-)
+ .../weston-dmabuf-formats/Makefile            | 49 +++++++++++++++----
+ 1 file changed, 39 insertions(+), 10 deletions(-)
 
 diff --git a/usr/src/nvidia/graphics_demos/weston-dmabuf-formats/Makefile b/usr/src/nvidia/graphics_demos/weston-dmabuf-formats/Makefile
 index 5c4d9ea..2c12dff 100644
@@ -84,6 +84,3 @@ index 5c4d9ea..2c12dff 100644
  endef
  $(foreach demolib,$(WESTON-DMABUF-FORMATS_DEMOLIBS),$(eval $(call demolib-rule,$(demolib))))
 +$(foreach protocol,$(PROTOCOLS),$(eval $(call protocol-rule,$(basename $(protocol)))))
--- 
-2.34.1
-
