@@ -7,6 +7,7 @@ TEGRA_UEFI_USE_SIGNED_FILES ??= "false"
 IMAGE_TYPES += "tegraflash-tar"
 CONVERSIONTYPES =+ "simg"
 
+
 IMAGE_ROOTFS_ALIGNMENT ?= "4"
 
 def tegra_default_rootfs_size(d):
@@ -453,6 +454,11 @@ EOF
     chmod +x $outfile
 }
 
+tegra_mksparse() {
+    PATH="${STAGING_BINDIR_NATIVE}/${FLASHTOOLS_DIR}:$PATH"
+    mksparse -b ${TEGRA_BLBLOCKSIZE} --fillpattern=0 "$1" "$2"
+}
+
 IMAGE_CMD:tegraflash-tar = "create_tegraflash_pkg"
 do_image_tegraflash_tar[depends] += "dtc-native:do_populate_sysroot coreutils-native:do_populate_sysroot \
                                  tegra-flashtools-native:do_populate_sysroot gptfdisk-native:do_populate_sysroot \
@@ -463,3 +469,5 @@ do_image_tegraflash_tar[depends] += "dtc-native:do_populate_sysroot coreutils-na
                                  virtual/secure-os:do_deploy ${TEGRA_SIGNING_EXTRA_DEPS} ${DTB_EXTRA_DEPS} \
                                  ${@'${TEGRAFLASH_INITRD_FLASH_IMAGE}:do_image_complete' if d.getVar('TEGRAFLASH_INITRD_FLASH_IMAGE') != '' else ''}"
 IMAGE_TYPEDEP:tegraflash-tar += "${IMAGE_TEGRAFLASH_FS_TYPE}"
+CONVERSION_CMD:simg = "tegra_mksparse ${IMAGE_NAME}.${type} ${IMAGE_NAME}.${type}.simg"
+CONVERSION_DEPENDS_simg = "tegra-flashtools-native"
