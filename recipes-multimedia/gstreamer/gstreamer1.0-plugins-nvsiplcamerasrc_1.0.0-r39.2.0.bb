@@ -28,3 +28,4 @@ do_install() {
 	oe_runmake install DESTDIR="${D}"
 }
 FILES:${PN} = "${libdir}/gstreamer-1.0"
+RDEPENDS:${PN} = "jetson-sipl-api"
