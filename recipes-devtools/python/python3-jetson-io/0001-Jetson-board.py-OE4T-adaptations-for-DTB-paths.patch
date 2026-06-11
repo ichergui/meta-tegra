@@ -1,0 +1,114 @@
+From 40ae7b463e600de3c10238f6603566f912158693 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Thu, 11 Jun 2026 12:00:00 -0700
+Subject: [PATCH] Jetson/board.py: OE4T adaptations for DTB paths
+
+_board_root_partition_is_block_device() checked only /dev/block/
+(an Android convention) to determine whether the root filesystem is
+on a local block device. On standard Linux the equivalent path is
+/sys/dev/block/, so the check always returned False on Ubuntu-based
+Jetson systems, causing the tool to unnecessarily mount the APP
+partition and look for DTBs in /mnt/APP/boot/dtb instead of /boot/dtb.
+
+find_compatible_dtbo_files() was called with self.bootdir (/boot)
+instead of dtbdir (/boot/dtb). Starting with L4T r35+, all DTBOs
+are installed under /boot/dtb/ alongside the DTBs, so the DTBO
+search found nothing and no headers were loaded.
+
+OE/Yocto builds do not populate /boot/dtb on the rootfs by default.
+The python3-jetson-io recipe installs the machine DTB and DTBO files
+under /usr/share/jetson-io at image build time. Teach board.py to
+prefer that directory when present, and write generated overlays
+there as well.
+
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
+---
+ opt/nvidia/jetson-io/Jetson/board.py | 37 +++++++++++++++++++++++-----
+ 1 file changed, 31 insertions(+), 6 deletions(-)
+
+diff --git a/opt/nvidia/jetson-io/Jetson/board.py b/opt/nvidia/jetson-io/Jetson/board.py
+index fb45b5c..a1b2c3d 100644
+--- a/opt/nvidia/jetson-io/Jetson/board.py
++++ b/opt/nvidia/jetson-io/Jetson/board.py
+@@ -117,7 +117,9 @@ def _board_root_partition_is_block_device():
+     dev = syscall.call_out('mountpoint -q -d /')
+     if not dev or len(dev) != 1:
+         raise RuntimeError("Root partition not found!")
+-    return os.path.exists("/dev/block/%s" % dev[0])
++    # /dev/block/ exists on Android-based systems; /sys/dev/block/ on standard Linux
++    return os.path.exists("/dev/block/%s" % dev[0]) or \
++           os.path.exists("/sys/dev/block/%s" % dev[0])
+ 
+ 
+ def _board_root_partition_get_partlabel():
+@@ -145,6 +147,17 @@ def _board_partition_is_root_mountpoint(partlabel):
+         return True
+     return False
+ 
++
++OE_JETSON_IO_DTBDIR = '/usr/share/jetson-io'
++
++
++def _board_get_oe_dtbdir():
++    if os.path.isdir(OE_JETSON_IO_DTBDIR) and glob.glob(
++            os.path.join(OE_JETSON_IO_DTBDIR, '*.dtb')):
++        return OE_JETSON_IO_DTBDIR
++    return None
++
++
+ def _board_get_dtb(compat, model, path):
+     dtbs = dtc.find_compatible_dtb_files(compat, model, path)
+ 
+@@ -212,8 +225,12 @@ class Board(object):
+         self.appdir = None
+         self.bootdir = '/boot'
+         self.extlinux = '/boot/extlinux/extlinux.conf'
+-        dtbdir = os.path.join(self.bootdir, 'dtb')
+-        fio.is_rw(self.bootdir)
++        oe_dtbdir = _board_get_oe_dtbdir()
++        if oe_dtbdir:
++            dtbdir = oe_dtbdir
++        else:
++            dtbdir = os.path.join(self.bootdir, 'dtb')
++            fio.is_rw(self.bootdir)
+ 
+         #Finding the active partition in case of redundant rootfs flash.
+         activepart = syscall.call_out('nvbootctrl -t rootfs get-current-slot')
+@@ -231,17 +248,20 @@ class Board(object):
+         # not mounted with the active partition, then it is necessary to
+         # find and mount the active partition and copy the generated
+         # files back to this partition.
+-        if not _board_partition_is_root_mountpoint(mountpart):
+-            self.appdir = _board_partition_mount(mountpart)
+-            dtbdir = os.path.join(self.appdir, 'boot/dtb')
+-            fio.is_rw(self.appdir)
++        if oe_dtbdir is None:
++            if not _board_partition_is_root_mountpoint(mountpart):
++                self.appdir = _board_partition_mount(mountpart)
++                dtbdir = os.path.join(self.appdir, 'boot/dtb')
++                fio.is_rw(self.appdir)
+ 
+         # Import platform specific data
+         self.compat = dt.read_prop('compatible')
+         self.model = dt.read_prop('model')
+         self.dtb = _board_get_dtb(self.compat, self.model, dtbdir)
+         dtbos = dtc.find_compatible_dtbo_files(self.compat.split(),
+-                                               self.bootdir)
++                                               dtbdir)
++        self.dtbdir = dtbdir
++
+         # Import pinmux
+         self.pinmux = pmx.PinMux()
+ 
+@@ -304,7 +324,7 @@ class Board(object):
+             self.header.pin_set_state(pin, io.PinMode.SFIO, function)
+ 
+     def _create_header_dtbo(self, name):
+-        dtbo = os.path.join(self.bootdir, name)
++        dtbo = os.path.join(self.dtbdir, name)
+         shutil.copyfile(self.hdtbo, dtbo)
+         pins = []
+ 
+-- 
+2.43.0
