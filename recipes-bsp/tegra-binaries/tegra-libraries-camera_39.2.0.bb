@@ -73,6 +73,9 @@ do_install() {
     install -m755 ${B}/usr/sbin/nvtunerd ${D}${sbindir}/
     install -d ${D}${libdir}/nvsipl_drv
     install -m 0644 ${S}/usr/lib/nvsipl_drv/libnvsipl_qry_vb1940.so ${D}${libdir}/nvsipl_drv/
+    install -m 0644 ${S}/usr/lib/nvsipl_drv/libnvsipl_qry_nova0_hawk.so ${D}${libdir}/nvsipl_drv/
+    install -m 0644 ${S}/usr/lib/nvsipl_drv/libnvsipl_qry_smart_imx728.so ${D}${libdir}/nvsipl_drv/
+    install -m 0644 ${S}/usr/lib/nvsipl_drv/libnvsipl_qry_smart_imx623.so ${D}${libdir}/nvsipl_drv/
 }
 
 PACKAGES =+ "tegra-libraries-argus-daemon-base ${PN}-nvtunerd ${PN}-sipl"
